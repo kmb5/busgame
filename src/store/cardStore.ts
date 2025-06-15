@@ -55,6 +55,8 @@ const rankOrder: Rank[] = [
 ];
 const getRankValue = (rank: Rank) => rankOrder.indexOf(rank);
 
+const DEBUG = import.meta.env.VITE_DEBUG === "true";
+
 export interface HandCard {
   card: Card;
   faceUp: boolean;
@@ -100,6 +102,10 @@ export const useCardStore = create<GameState>((set, get) => ({
       showReset: false,
       isTransitioning: false,
     });
+    if (DEBUG) {
+      // Print next card in deck
+      console.log(`[DEBUG] Next card in deck: ${deck[0].rank} ${deck[0].suit}`);
+    }
   },
   resetGame: () => {
     get().startGame();
@@ -182,6 +188,18 @@ export const useCardStore = create<GameState>((set, get) => ({
       setTimeout(() => {
         set({ message: null, isTransitioning: false });
       }, 2000);
+    }
+    // Debug: print all face-down cards in the hand after guess
+    if (DEBUG) {
+      const nextCard = deck[0];
+      const faceDowns = get()
+        .hand.map((h, i) => ({ ...h, index: i }))
+        .filter((h) => !h.faceUp)
+        .map((h) => ({ index: h.index, card: h.card }));
+      console.log("[DEBUG] Face-down cards in hand:", faceDowns);
+      console.log(
+        `[DEBUG] Next card in deck: ${nextCard.rank} ${nextCard.suit}`
+      );
     }
   },
 }));
