@@ -4,7 +4,6 @@ import type { Card, Rank, Suit } from "../types/card";
 const createDeck = (): Card[] => {
   const suits: Suit[] = ["hearts", "diamonds", "clubs", "spades"];
   const ranks: Rank[] = [
-    "A",
     "2",
     "3",
     "4",
@@ -17,6 +16,7 @@ const createDeck = (): Card[] => {
     "J",
     "Q",
     "K",
+    "A",
   ];
   const deck: Card[] = [];
 
