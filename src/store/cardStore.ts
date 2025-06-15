@@ -66,8 +66,12 @@ export interface GameState {
   drawnCard: Card | null;
   activeIndex: number;
   revealedIndices: number[];
+  message: string | null;
+  showReset: boolean;
+  isTransitioning: boolean;
   startGame: () => void;
   guess: (type: "up" | "down" | "equal") => Promise<void>;
+  resetGame: () => void;
 }
 
 export const useCardStore = create<GameState>((set, get) => ({
@@ -76,6 +80,9 @@ export const useCardStore = create<GameState>((set, get) => ({
   drawnCard: null,
   activeIndex: 0,
   revealedIndices: [],
+  message: null,
+  showReset: false,
+  isTransitioning: false,
   startGame: () => {
     const deck = shuffleDeck(createDeck());
     // Hand alternates up, down, up, down, up
@@ -89,11 +96,18 @@ export const useCardStore = create<GameState>((set, get) => ({
       drawnCard: null,
       activeIndex: 0,
       revealedIndices: [],
+      message: null,
+      showReset: false,
+      isTransitioning: false,
     });
+  },
+  resetGame: () => {
+    get().startGame();
   },
   guess: async (type) => {
     const { hand, deck, activeIndex } = get();
     if (!deck.length) return;
+    set({ isTransitioning: true });
     // 1. Reveal top card from deck
     const drawnCard = deck[0];
     set({ drawnCard });
@@ -120,25 +134,38 @@ export const useCardStore = create<GameState>((set, get) => ({
     if (type === "equal") correct = drawnValue === activeValue;
     // 4. If win: drawn card replaces active, move active forward
     if (correct) {
-      set({
-        hand: hand.map((h, i) =>
-          i === activeIndex ? { card: drawnCard, faceUp: true } : h
-        ),
-        drawnCard: null,
-        deck: deck.slice(1),
-        activeIndex:
-          activeIndex + 1 < hand.length ? activeIndex + 1 : activeIndex,
-        revealedIndices: [],
-      });
+      // If this was the last card, show win message
+      if (activeIndex === hand.length - 1) {
+        set({
+          hand: hand.map((h, i) =>
+            i === activeIndex ? { card: drawnCard, faceUp: true } : h
+          ),
+          drawnCard: null,
+          deck: deck.slice(1),
+          message: "YOU GOT OFF THE BUS!!",
+          showReset: true,
+          isTransitioning: true,
+        });
+      } else {
+        set({
+          hand: hand.map((h, i) =>
+            i === activeIndex ? { card: drawnCard, faceUp: true } : h
+          ),
+          drawnCard: null,
+          deck: deck.slice(1),
+          activeIndex:
+            activeIndex + 1 < hand.length ? activeIndex + 1 : activeIndex,
+          revealedIndices: [],
+          isTransitioning: false,
+        });
+      }
     } else {
       // 5. If lose: reset active, and for any revealed face-down card, replace with new face-down card from deck
       let newHand = [...hand];
       let newDeck = deck.slice(1);
-      revealedIndices = revealedIndices.length
-        ? revealedIndices
-        : get().revealedIndices;
-      for (const idx of revealedIndices) {
-        if (newDeck.length) {
+      // Replace all odd-indexed (2nd, 4th) face-up cards with new face-down cards from the deck
+      for (let idx = 1; idx < newHand.length; idx += 2) {
+        if (newHand[idx].faceUp && newDeck.length) {
           newHand[idx] = { card: newDeck[0], faceUp: false };
           newDeck = newDeck.slice(1);
         }
@@ -149,7 +176,12 @@ export const useCardStore = create<GameState>((set, get) => ({
         deck: newDeck,
         activeIndex: 0,
         revealedIndices: [],
+        message: "THE BUS GOES ON",
+        isTransitioning: true,
       });
+      setTimeout(() => {
+        set({ message: null, isTransitioning: false });
+      }, 2000);
     }
   },
 }));
