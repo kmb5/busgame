@@ -23,6 +23,12 @@ export const CardStack = ({ cards, offset = 3, active = false }: CardStackProps)
             zIndex: i,
             width: '100%',
             height: '100%',
+            filter:
+              active && i === cards.length - 1
+                ? 'drop-shadow(0 8px 16px rgba(0, 0, 0, 0.2))'
+                : 'drop-shadow(0 4px 8px rgba(0, 0, 0, 0.1))',
+            transform: active && i === cards.length - 1 ? 'translateY(-4px)' : 'none',
+            transition: 'all 0.2s ease-in-out',
           }}
         >
           <Card {...card} active={active && i === cards.length - 1 ? true : false} />
