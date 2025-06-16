@@ -1,9 +1,13 @@
 import { CardDeck } from './components/CardDeck';
+import { Card } from './components/Card';
+import { CardStack } from './components/CardStack';
 
 function App() {
   return (
     <div className="h-screen w-screen">
-      <CardDeck />
+      <div className="flex gap-4 p-4">
+        <CardDeck />
+      </div>
     </div>
   );
 }
