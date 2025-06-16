@@ -1,6 +1,5 @@
 import { useEffect, useState } from 'react';
 import { useGameStore } from '../store/gameStore';
-import { ActionButtons } from './ActionButtons';
 import { CardStack } from './CardStack';
 import { Card } from './Card';
 import { useDeckStore } from '../store/deckStore';
@@ -116,8 +115,6 @@ export const Game = () => {
           ))}
         </div>
       </div>
-
-      <ActionButtons />
     </div>
   );
 };

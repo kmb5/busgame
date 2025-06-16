@@ -1,5 +1,6 @@
 import { Card } from './Card';
 import type { Card as CardType } from '../types/card';
+import { useGameStore } from '../store/gameStore';
 
 interface CardStackProps {
   cards: CardType[];
@@ -8,6 +9,7 @@ interface CardStackProps {
 }
 
 export const CardStack = ({ cards, offset = 2, active = false }: CardStackProps) => {
+  const guess = useGameStore(s => s.guess);
   // Limit the number of visible cards for performance/clarity
   const visible = Math.min(cards.length, 12);
 
@@ -32,7 +34,34 @@ export const CardStack = ({ cards, offset = 2, active = false }: CardStackProps)
           }}
         >
           {/* Only highlight the topmost card from the active stack with yellow border */}
-          <Card {...card} active={active && i === cards.length - 1 ? true : false} />
+          <div className="relative">
+            <Card {...card} active={active && i === cards.length - 1 ? true : false} />
+            {active && i === cards.length - 1 && (
+              <div className="absolute inset-0 flex items-center justify-center gap-2 rounded-lg transition-opacity duration-200">
+                <button
+                  className="w-10 h-10  bg-black/75 rounded-full shadow-lg flex items-center justify-center text-xl text-white font-bold transition hover:bg-opacity-100 focus:outline-none focus:ring-2 focus:ring-blue-400"
+                  aria-label="Up"
+                  onClick={() => guess('up')}
+                >
+                  ▲
+                </button>
+                <button
+                  className="w-10 h-10  bg-black/75 rounded-full shadow-lg flex items-center justify-center text-xl text-white font-bold transition hover:bg-opacity-100 focus:outline-none focus:ring-2 focus:ring-blue-400"
+                  aria-label="Equal"
+                  onClick={() => guess('equal')}
+                >
+                  =
+                </button>
+                <button
+                  className="w-10 h-10  bg-black/75 rounded-full shadow-lg flex items-center justify-center text-xl text-white font-bold transition hover:bg-opacity-100 focus:outline-none focus:ring-2 focus:ring-blue-400"
+                  aria-label="Down"
+                  onClick={() => guess('down')}
+                >
+                  ▼
+                </button>
+              </div>
+            )}
+          </div>
         </div>
       ))}
     </div>
