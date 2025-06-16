@@ -1,4 +1,5 @@
 import type { Card as CardType, Suit } from '../types/card';
+import { CardBackWrapper } from './CardBack';
 
 const getSuitColor = (suit: Suit) => {
   return suit === 'hearts' || suit === 'diamonds' ? 'text-red-600' : 'text-black';
@@ -43,20 +44,7 @@ export const Card = ({ suit, rank, active = false, faceDown = true }: CardType) 
             backfaceVisibility: 'hidden',
           }}
         >
-          <div className="absolute inset-0 w-full h-full bg-blue-600 rounded-lg shadow-lg border border-gray-200 overflow-hidden">
-            <svg
-              className="absolute inset-0 w-full h-full"
-              viewBox="0 0 100 140"
-              fill="none"
-              xmlns="http://www.w3.org/2000/svg"
-            >
-              <rect width="100" height="140" rx="12" fill="#2563eb" />
-              <pattern id="pattern" patternUnits="userSpaceOnUse" width="20" height="20">
-                <circle cx="10" cy="10" r="6" fill="#fff" fillOpacity="0.25" />
-              </pattern>
-              <rect width="100" height="140" rx="12" fill="url(#pattern)" />
-            </svg>
-          </div>
+          <CardBackWrapper />
         </div>
 
         {/* Card Front (face up) */}
@@ -69,7 +57,7 @@ export const Card = ({ suit, rank, active = false, faceDown = true }: CardType) 
             backfaceVisibility: 'hidden',
           }}
         >
-          <div className={`flex flex-col p-3 w-full h-full border border-gray-200 rounded-lg`}>
+          <div className={`flex flex-col p-3 w-full h-full border border-black/30 rounded-lg`}>
             <div className={`text-[min(4vw,min(24px,3vh))] font-bold ${suitColor}`}>
               {rank}
               {suitSymbol}
