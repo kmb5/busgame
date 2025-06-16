@@ -2,13 +2,24 @@ import { useEffect, useState } from 'react';
 import { useGameStore } from '../store/gameStore';
 import { ActionButtons } from './ActionButtons';
 import { CardStack } from './CardStack';
+import { Card } from './Card';
 import { useDeckStore } from '../store/deckStore';
 
 export const Game = () => {
-  const { hand, drawnCard, activeIndex, startGame, message, showReset, resetGame } = useGameStore();
+  const {
+    hand,
+    drawnCard,
+    activeIndex,
+    startGame,
+    message,
+    showReset,
+    resetGame,
+    handSize,
+    setHandSize,
+  } = useGameStore();
+  const deck = useDeckStore(s => s.deck);
 
   const [showMsg, setShowMsg] = useState(false);
-  const deck = useDeckStore(s => s.deck);
 
   useEffect(() => {
     if (message) {
@@ -28,6 +39,34 @@ export const Game = () => {
 
   return (
     <div className="h-full w-full flex flex-col items-center justify-center bg-gray-100 p-2 md:p-4 relative">
+      {/* Hand Size Control */}
+      <div className="absolute top-4 left-4 flex items-center gap-4 bg-white p-2 rounded-lg shadow-md">
+        <div className="flex items-center gap-2">
+          <span className="text-sm font-medium">Hand Size:</span>
+          <div className="flex items-center gap-1">
+            <button
+              className="w-8 h-8 flex items-center justify-center bg-gray-100 rounded hover:bg-gray-200 transition"
+              onClick={() => setHandSize(Math.max(3, handSize - 1))}
+            >
+              -
+            </button>
+            <span className="w-8 text-center font-medium">{handSize}</span>
+            <button
+              className="w-8 h-8 flex items-center justify-center bg-gray-100 rounded hover:bg-gray-200 transition"
+              onClick={() => setHandSize(Math.min(9, handSize + 1))}
+            >
+              +
+            </button>
+          </div>
+        </div>
+        <button
+          className="px-3 py-1 bg-blue-500 text-white rounded hover:bg-blue-600 transition text-sm font-medium"
+          onClick={resetGame}
+        >
+          New Game
+        </button>
+      </div>
+
       {/* Game Message Overlay */}
       {message && (
         <div className="absolute inset-0 z-50 flex items-center justify-center">
@@ -60,10 +99,10 @@ export const Game = () => {
           {/* Main deck stack */}
           <CardStack cards={deck} />
 
-          {/* Drawn card stack */}
+          {/* The card the user draws when pressing the button */}
           {drawnCard && (
             <div className="absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 z-30">
-              <CardStack cards={[drawnCard]} />
+              <Card {...drawnCard} />
             </div>
           )}
         </div>
@@ -72,7 +111,7 @@ export const Game = () => {
         <div className="flex flex-wrap justify-center gap-2 md:gap-4 max-w-[70vw]">
           {hand.map((stack, index) => (
             <div key={`stack-${index}`}>
-              <CardStack cards={stack} offset={2} active={index === activeIndex} />
+              <CardStack cards={stack} active={index === activeIndex} />
             </div>
           ))}
         </div>

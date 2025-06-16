@@ -7,7 +7,7 @@ interface CardStackProps {
   active?: boolean;
 }
 
-export const CardStack = ({ cards, offset = 3, active = false }: CardStackProps) => {
+export const CardStack = ({ cards, offset = 2, active = false }: CardStackProps) => {
   // Limit the number of visible cards for performance/clarity
   const visible = Math.min(cards.length, 12);
 
@@ -31,6 +31,7 @@ export const CardStack = ({ cards, offset = 3, active = false }: CardStackProps)
             transition: 'all 0.2s ease-in-out',
           }}
         >
+          {/* Only highlight the topmost card from the active stack with yellow border */}
           <Card {...card} active={active && i === cards.length - 1 ? true : false} />
         </div>
       ))}

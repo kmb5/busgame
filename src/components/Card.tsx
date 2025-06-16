@@ -1,10 +1,10 @@
-import type { Card as CardType } from '../types/card';
+import type { Card as CardType, Suit } from '../types/card';
 
-const getSuitColor = (suit: CardType['suit']) => {
+const getSuitColor = (suit: Suit) => {
   return suit === 'hearts' || suit === 'diamonds' ? 'text-red-600' : 'text-black';
 };
 
-const getSuitSymbol = (suit: CardType['suit']) => {
+const getSuitSymbol = (suit: Suit) => {
   switch (suit) {
     case 'hearts':
       return '♥';
@@ -20,11 +20,11 @@ const getSuitSymbol = (suit: CardType['suit']) => {
 export const Card = ({ suit, rank, active = false, faceDown = true }: CardType) => {
   const suitColor = getSuitColor(suit);
   const suitSymbol = getSuitSymbol(suit);
-  const ringClass = active ? 'ring-4 ring-yellow-400 rounded-lg' : '';
+  const activeHighlighClass = active ? 'ring-4 ring-yellow-400 rounded-lg' : '';
 
   return (
     <div
-      className={`w-[min(20vw,min(160px,25vh))] h-[min(28vw,min(224px,35vh))] ${ringClass} relative`}
+      className={`w-[min(20vw,min(160px,25vh))] h-[min(28vw,min(224px,35vh))] ${activeHighlighClass} relative`}
       style={{ perspective: '800px' }}
     >
       {/* Card container that flips */}

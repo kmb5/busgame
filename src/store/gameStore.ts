@@ -11,8 +11,10 @@ interface GameState {
   activeIndex: number;
   message: string | null;
   showReset: boolean;
+  handSize: number;
   startGame: () => void;
   resetGame: () => void;
+  setHandSize: (size: number) => void;
   guess: (type: 'up' | 'down' | 'equal') => void;
 }
 
@@ -22,6 +24,11 @@ export const useGameStore = create<GameState>((set, get) => ({
   activeIndex: 0,
   message: null,
   showReset: false,
+  handSize: 5,
+
+  setHandSize: (size: number) => {
+    set({ handSize: size });
+  },
 
   startGame: () => {
     const deck = useDeckStore.getState();
@@ -29,7 +36,7 @@ export const useGameStore = create<GameState>((set, get) => ({
 
     // Create 5 stacks, each starting with one card
     // Odd-indexed cards start face down
-    const hand = deck.draw(5).map((card, index) => [
+    const hand = deck.draw(get().handSize).map((card, index) => [
       {
         ...card,
         faceDown: index % 2 === 1,
