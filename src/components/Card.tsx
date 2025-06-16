@@ -24,7 +24,7 @@ export const Card = ({ suit, rank, active = false, faceDown = true }: CardType) 
 
   return (
     <div
-      className={`w-[min(20vw,120px)] h-[min(28vw,168px)] ${ringClass} relative`}
+      className={`w-[min(20vw,min(160px,25vh))] h-[min(28vw,min(224px,35vh))] ${ringClass} relative`}
       style={{ perspective: '800px' }}
     >
       {/* Card container that flips */}
@@ -38,7 +38,7 @@ export const Card = ({ suit, rank, active = false, faceDown = true }: CardType) 
         <div
           className="absolute inset-0 backface-hidden"
           style={{
-            borderRadius: '0.5rem',
+            borderRadius: '0.75rem',
             boxShadow: '0 4px 12px rgba(0,0,0,0.08)',
             backfaceVisibility: 'hidden',
           }}
@@ -64,20 +64,22 @@ export const Card = ({ suit, rank, active = false, faceDown = true }: CardType) 
           className="absolute inset-0 backface-hidden transform rotate-y-180"
           style={{
             background: 'white',
-            borderRadius: '0.5rem',
+            borderRadius: '0.75rem',
             boxShadow: '0 4px 12px rgba(0,0,0,0.08)',
             backfaceVisibility: 'hidden',
           }}
         >
-          <div className={`flex flex-col p-2 w-full h-full border border-gray-200 rounded-lg`}>
-            <div className={`text-[min(4vw,24px)] font-bold ${suitColor}`}>
+          <div className={`flex flex-col p-3 w-full h-full border border-gray-200 rounded-lg`}>
+            <div className={`text-[min(4vw,min(24px,3vh))] font-bold ${suitColor}`}>
               {rank}
               {suitSymbol}
             </div>
             <div className="flex-grow flex items-center justify-center">
-              <span className={`text-[min(8vw,48px)] ${suitColor}`}>{suitSymbol}</span>
+              <span className={`text-[min(8vw,min(48px,6vh))] ${suitColor}`}>{suitSymbol}</span>
             </div>
-            <div className={`text-[min(4vw,24px)] font-bold ${suitColor} transform rotate-180`}>
+            <div
+              className={`text-[min(4vw,min(24px,3vh))] font-bold ${suitColor} transform rotate-180`}
+            >
               {rank}
               {suitSymbol}
             </div>

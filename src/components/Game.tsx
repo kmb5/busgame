@@ -4,7 +4,7 @@ import { ActionButtons } from './ActionButtons';
 import { CardStack } from './CardStack';
 import { useDeckStore } from '../store/deckStore';
 
-export const CardDeck = () => {
+export const Game = () => {
   const { hand, drawnCard, activeIndex, startGame, message, showReset, resetGame } = useGameStore();
 
   const [showMsg, setShowMsg] = useState(false);

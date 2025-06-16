@@ -12,7 +12,7 @@ export const CardStack = ({ cards, offset = 3, active = false }: CardStackProps)
   const visible = Math.min(cards.length, 12);
 
   return (
-    <div className="relative w-[min(20vw,120px)] h-[min(28vw,168px)] mr-6 flex items-center justify-center select-none">
+    <div className="relative w-[min(20vw,min(160px,25vh))] h-[min(28vw,min(224px,35vh))] mr-4 flex items-center justify-center select-none">
       {cards.slice(0, visible).map((card, i) => (
         <div
           key={`${card.rank}-${card.suit}-${i}`}
